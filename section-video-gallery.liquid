@@ -1,0 +1,147 @@
+ 
+
+<section class="Section" id="{{ section.id }}">
+  
+  
+  
+  <div class="header">
+    <h1>{{ section.settings.title }}</h1> 
+  </div>
+  
+  <div class="container">
+    
+    <div class="row py-5">
+      {%  assign fVideo_id = 1 %}
+      
+      {% for block in section.blocks %}
+      {% assign  fVideo_id = fVideo_id | plus: 1 %}
+      
+      <div class="col-md-4 mb-4">
+        
+        
+      {% if  block.settings.image != blank %}
+      <button type="button" class="btn btn-primary playVideo" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{ fVideo_id }}"> 
+        <img 
+                       src="{{ block.settings.image | img_url: '2000x2000' }}" 
+                       class="img-fluid w-100" 
+                       alt="toolbox widget catalog image"
+                       data-aspectration="{{ block.settings.image.aspect_ration}}"
+                       data-src="{{ img_url }}" 
+
+                       >  
+        <svg class="Icon Icon--play" role="presentation" viewBox="0 0 24 24">
+            <path d="M12 0C5.383 0 0 5.383 0 12s5.383 12 12 12 12-5.383 12-12S18.617 0 12 0zm-2 15.5V9l4.5 3.25L10 15.5z" fill="currentColor"></path>
+          </svg>
+
+      </button>
+        <h3>{{ block.settings.videotitle }}</h3>
+
+ 
+      <div class="modal fade" id="staticBackdrop{{ fVideo_id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-dialog-centered modal-dialog-scrollable  modal-xl">
+          <div class="modal-content">
+             
+            <div class="modal-body"> 
+              
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+              
+              {% if block.settings.video_url.type == 'youtube' %} 
+                <div class="ratio ratio-16x9">
+                  <iframe 
+                          class="Image--lazyLoad" 
+                          src="//www.youtube.com/embed/{{ block.settings.video_url.id }}?autoplay=0&showinfo=0&controls=1&rel=0&modestbranding=1" 
+                          title="YouTube video" 
+                          allowfullscreen
+                          >
+                  </iframe>
+                </div> 
+                {% elsif block.settings.video_url.type == 'vimeo' %}
+                <iframe class="Image--lazyLoad" data-src="//player.vimeo.com/video/{{ block.settings.video_url.id }}?autoplay=1&portrait=0&byline=0&color={{ block.accent_color | remove_first: '#' }}" frameborder="0"></iframe>
+              {% endif %} 
+            </div> 
+          </div>
+        </div>
+      </div>
+        
+        
+        {% else %}
+        {% if block.settings.video_url.type == 'youtube' %} 
+                <div class="ratio ratio-16x9">
+                  <iframe 
+                          class="Image--lazyLoad" 
+                          src="//www.youtube.com/embed/{{ block.settings.video_url.id }}?autoplay=0&showinfo=0&controls=1&rel=0&modestbranding=1" 
+                          title="YouTube video" 
+                          allowfullscreen
+                          >
+                  </iframe>
+                </div> 
+                {% elsif block.settings.video_url.type == 'vimeo' %}
+                <iframe class="Image--lazyLoad" data-src="//player.vimeo.com/video/{{ block.settings.video_url.id }}?autoplay=1&portrait=0&byline=0&color={{ block.accent_color | remove_first: '#' }}" frameborder="0"></iframe>
+              {% endif %} 
+        
+        {% endif %}
+        
+        
+        
+      </div>
+      {% endfor %}
+      
+    </div>
+    
+  </div>
+</section>
+
+<style>
+  #section-{{ section.id }},
+  #section-{{ section.id }} .Heading {
+    color: {{ section.settings.text_color }};
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Featured video",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title Name",
+      "default": "All Videos"
+    }
+  ],
+	"blocks": [
+		{
+
+		"type": "text_block",
+		"name": "Add Catalog Image",
+		"settings": [ 
+            {
+              "type": "image_picker",
+              "id": "image",
+              "label": "Image",
+              "info": "1500 x 800px jpg recommended."
+            },
+            {
+              "type": "video_url",
+              "accept": ["vimeo", "youtube"],
+              "id": "video_url",
+              "label": "Video URL",
+              "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+            },
+            {
+              "type": "text",
+              "id": "videotitle",
+              "label": "Video Title" 
+            }
+		]
+		}
+	],
+  "presets": [
+    {
+      "category": "Video",
+      "name": "Featured video",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}
